@@ -1,18 +1,17 @@
 package com.example.simplehttprequest
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.example.simplehttprequest.networks.RequestHandler
 import com.google.android.material.button.MaterialButton
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import org.json.JSONObject
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
+
+    private val _job = SupervisorJob()
+    private val _coroutinesScope = CoroutineScope(_job)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,13 +27,19 @@ class MainActivity : AppCompatActivity() {
                 etMainUrl.error = "Form is required"
                 return@setOnClickListener
             } else {
-                CoroutineScope(Dispatchers.IO).launch {
+                _coroutinesScope.launch(Dispatchers.IO) {
                     val request = RequestHandler.requestGET(urlData)
-                    CoroutineScope(Dispatchers.Main).launch {
+
+                    withContext(Dispatchers.Main) {
                         tvResult.text = request
                     }
                 }
             }
         }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        _job.cancel()
     }
 }
