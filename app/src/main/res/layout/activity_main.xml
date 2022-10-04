@@ -15,6 +15,7 @@
             android:id="@+id/et_main_url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="https://reqres.in/api/users"
             android:hint="Enter URL"/>
     </com.google.android.material.textfield.TextInputLayout>
 

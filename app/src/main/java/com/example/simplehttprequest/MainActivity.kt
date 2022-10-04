@@ -1,11 +1,14 @@
 package com.example.simplehttprequest
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.simplehttprequest.networks.RequestHandler
+import com.example.simplehttprequest.networks.UserResponse
 import com.google.android.material.button.MaterialButton
+import com.google.gson.Gson
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
@@ -32,6 +35,10 @@ class MainActivity : AppCompatActivity() {
 
                     withContext(Dispatchers.Main) {
                         tvResult.text = request
+
+                        val gson = Gson()
+                        val userList = gson.fromJson(request, UserResponse::class.java)
+                        Log.d("Converted json", userList.toString())
                     }
                 }
             }
